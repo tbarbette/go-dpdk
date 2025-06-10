@@ -43,6 +43,10 @@ free_bulk(struct rte_mbuf **pkts, unsigned int count)
 
 enum {
 	MBUF_RSS_OFF = offsetof(struct rte_mbuf, hash.rss),
+	MBUF_DATA_OFF = offsetof(struct rte_mbuf, data_off),
+	MBUF_DATA_LEN = offsetof(struct rte_mbuf, data_len),
+	MBUF_BUF_LEN = offsetof(struct rte_mbuf, buf_len),
+	MBUF_PKT_LEN = offsetof(struct rte_mbuf, pkt_len),
 };
 
 */
@@ -172,16 +176,16 @@ func (m *Mbuf) Data() []byte {
 	var d []byte
 	buf := mbuf(m)
 	sh := (*reflect.SliceHeader)(unsafe.Pointer(&d))
-	sh.Data = uintptr(buf.buf_addr) + uintptr(buf.data_off)
-	sh.Len = int(buf.data_len)
-	sh.Cap = int(buf.data_len)
+	sh.Data = uintptr(buf.buf_addr) + uintptr(*(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_DATA_OFF)))
+	sh.Len = int(*(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_DATA_LEN)))
+	sh.Cap = int(*(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_DATA_LEN)))
 	return d
 }
 
 // PktLen returns total packet length: sum of all segments.
 func (m *Mbuf) PktLen() uint32 {
 	rteMbuf := mbuf(m)
-	return uint32(rteMbuf.pkt_len)
+	return *(*uint32)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_PKT_LEN))
 }
 
 // Next returns next segment of scattered packet.
@@ -231,13 +235,16 @@ func AllocResetAndAppend(p *mempool.Mempool, data *common.CStruct) *Mbuf {
 // which must be equal to the size of the headroom in concrete mbuf.
 func (m *Mbuf) HeadRoomSize() uint16 {
 	rteMbuf := mbuf(m)
-	return uint16(rteMbuf.data_off)
+	return *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_DATA_OFF))
 }
 
 // TailRoomSize returns available length that can be appended to mbuf.
 func (m *Mbuf) TailRoomSize() uint16 {
 	rteMbuf := mbuf(m)
-	return uint16(rteMbuf.buf_len - rteMbuf.data_off - rteMbuf.data_len)
+	data_off := *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_DATA_OFF))
+	data_len := *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_DATA_LEN))
+	buf_len := *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_BUF_LEN))
+	return buf_len - data_off - data_len
 }
 
 // BufLen represents DataRoomSize that was initialized in
@@ -247,7 +254,7 @@ func (m *Mbuf) TailRoomSize() uint16 {
 // HeadRoomSize.
 func (m *Mbuf) BufLen() uint16 {
 	rteMbuf := mbuf(m)
-	return uint16(rteMbuf.buf_len)
+	return *(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(rteMbuf)) + C.MBUF_BUF_LEN))
 }
 
 // PktMbufHeadRoomSize represents RTE_PKTMBUF_HEADROOM size in
