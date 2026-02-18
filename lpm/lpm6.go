@@ -11,7 +11,7 @@ import (
 	"net/netip"
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/common"
 )
 
 // LPM6 is an RTE Longest Prefix Match lookup object.

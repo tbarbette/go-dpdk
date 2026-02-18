@@ -6,9 +6,9 @@ import (
 	"fmt"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/yerden/go-dpdk/eal"
-	"github.com/yerden/go-dpdk/ethdev"
-	"github.com/yerden/go-dpdk/mempool"
+	"github.com/tbarbette/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/mempool"
 )
 
 type CmdMempool struct{}

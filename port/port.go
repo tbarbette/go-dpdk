@@ -33,7 +33,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/common"
 )
 
 type (

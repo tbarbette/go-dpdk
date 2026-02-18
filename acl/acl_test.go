@@ -5,8 +5,8 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
-	"github.com/yerden/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/eal"
 )
 
 func assert(t testing.TB, expected bool, args ...interface{}) {

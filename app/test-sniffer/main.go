@@ -9,8 +9,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/yerden/go-dpdk/eal"
-	"github.com/yerden/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/ethdev"
 )
 
 var metricsEndpoint = flag.String("metrics", ":10010", "Specify listen address for Prometheus endpoint")

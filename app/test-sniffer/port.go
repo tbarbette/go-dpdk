@@ -6,8 +6,8 @@ import (
 	"log"
 	"syscall"
 
-	"github.com/yerden/go-dpdk/ethdev"
-	"github.com/yerden/go-dpdk/util"
+	"github.com/tbarbette/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/util"
 )
 
 // EthdevCallback specifies callback to call on ethdev.Port.

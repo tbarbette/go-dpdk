@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"strings"
 
-	"github.com/yerden/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/common"
 )
 
 func parseCmd(input string) ([]string, error) {

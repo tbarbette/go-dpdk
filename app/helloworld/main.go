@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/yerden/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/eal"
 )
 
 func main() {

@@ -11,8 +11,8 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
-	"github.com/yerden/go-dpdk/mempool"
+	"github.com/tbarbette/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/mempool"
 )
 
 // FdRx input port built on top of valid non-blocking file

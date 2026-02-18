@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/yerden/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/common"
 	"golang.org/x/sys/unix"
 )
 

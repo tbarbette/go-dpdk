@@ -7,7 +7,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/common"
 )
 
 // RegisterCallbackLSC installs a callback for RTE_ETH_EVENT_INTR_LSC event

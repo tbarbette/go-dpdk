@@ -15,10 +15,10 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/yerden/go-dpdk/eal"
-	"github.com/yerden/go-dpdk/ethdev"
-	"github.com/yerden/go-dpdk/memzone"
-	"github.com/yerden/go-dpdk/ring"
+	"github.com/tbarbette/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/memzone"
+	"github.com/tbarbette/go-dpdk/ring"
 )
 
 const (

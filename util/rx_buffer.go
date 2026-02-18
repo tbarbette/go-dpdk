@@ -17,9 +17,9 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/yerden/go-dpdk/common"
-	"github.com/yerden/go-dpdk/ethdev"
-	"github.com/yerden/go-dpdk/mbuf"
+	"github.com/tbarbette/go-dpdk/common"
+	"github.com/tbarbette/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/mbuf"
 )
 
 func geterr(n ...interface{}) error {

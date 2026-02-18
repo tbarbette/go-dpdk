@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/yerden/go-dpdk/eal"
-	"github.com/yerden/go-dpdk/ethdev"
-	"github.com/yerden/go-dpdk/ethdev/flow"
+	"github.com/tbarbette/go-dpdk/eal"
+	"github.com/tbarbette/go-dpdk/ethdev"
+	"github.com/tbarbette/go-dpdk/ethdev/flow"
 )
 
 func doOnMain(fn func() error) error {
