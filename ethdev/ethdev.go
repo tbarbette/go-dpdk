@@ -131,6 +131,25 @@ const (
 	FcFull uint32 = C.RTE_ETH_FC_FULL
 )
 
+const (
+	// MQ modes for RX
+	MqRxNone   uint = C.RTE_ETH_MQ_RX_NONE
+	MqRxRss    uint = C.RTE_ETH_MQ_RX_RSS
+	MqRxDcb    uint = C.RTE_ETH_MQ_RX_DCB
+	MqRxDcbRss uint = C.RTE_ETH_MQ_RX_DCB_RSS
+	MqRxVmdq   uint = C.RTE_ETH_MQ_RX_VMDQ_ONLY
+)
+
+const (
+	// RSS hash function flags
+	RssIP   uint64 = C.RTE_ETH_RSS_IP
+	RssTCP  uint64 = C.RTE_ETH_RSS_TCP
+	RssUDP  uint64 = C.RTE_ETH_RSS_UDP
+	RssSCTP uint64 = C.RTE_ETH_RSS_SCTP
+	RssIPv4 uint64 = C.RTE_ETH_RSS_IPV4
+	RssIPv6 uint64 = C.RTE_ETH_RSS_IPV6
+)
+
 // Option represents device option which is then used by
 // DevConfigure to setup Ethernet device.
 type Option struct {

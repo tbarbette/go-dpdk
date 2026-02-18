@@ -1,10 +1,5 @@
 package main
 
-/*
-#include <rte_ethdev.h>
-*/
-import "C"
-
 import (
 	"bytes"
 	"flag"
@@ -58,14 +53,14 @@ func newApp(reg prometheus.Registerer) (*App, error) {
 
 	rssConf := &ethdev.RssConf{
 		Key: bytes.Repeat([]byte{0x6D, 0x5A}, 20),
-		Hf:  C.RTE_ETH_RSS_IP,
+		Hf:  ethdev.RssIP,
 	}
 
 	ethdevCfg := &EthdevConfig{
 		Options: []ethdev.Option{
 			ethdev.OptRss(*rssConf),
 			ethdev.OptRxMode(ethdev.RxMode{
-				MqMode: C.RTE_ETH_MQ_RX_RSS,
+				MqMode: ethdev.MqRxRss,
 			}),
 		},
 		RxQueues: uint16(*rxQueues),

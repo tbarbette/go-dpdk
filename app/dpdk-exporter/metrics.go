@@ -1,6 +1,9 @@
 package main
 
-// #include <rte_ring.h>
+/*
+#cgo pkg-config: libdpdk
+#include <rte_ring.h>
+*/
 import "C"
 
 import (
