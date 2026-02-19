@@ -4,6 +4,39 @@ package lpm
 #include <stdlib.h>
 #include <rte_config.h>
 #include <rte_lpm6.h>
+#include <rte_version.h>
+
+static int compat_rte_lpm6_add(struct rte_lpm6 *lpm, const uint8_t *ip, uint8_t depth, uint32_t next_hop) {
+#if RTE_VERSION >= RTE_VERSION_NUM(24, 11, 0, 0)
+	return rte_lpm6_add(lpm, (const struct rte_ipv6_addr *)ip, depth, next_hop);
+#else
+	return rte_lpm6_add(lpm, ip, depth, next_hop);
+#endif
+}
+
+static int compat_rte_lpm6_delete(struct rte_lpm6 *lpm, const uint8_t *ip, uint8_t depth) {
+#if RTE_VERSION >= RTE_VERSION_NUM(24, 11, 0, 0)
+	return rte_lpm6_delete(lpm, (const struct rte_ipv6_addr *)ip, depth);
+#else
+	return rte_lpm6_delete(lpm, ip, depth);
+#endif
+}
+
+static int compat_rte_lpm6_lookup(struct rte_lpm6 *lpm, const uint8_t *ip, uint32_t *next_hop) {
+#if RTE_VERSION >= RTE_VERSION_NUM(24, 11, 0, 0)
+	return rte_lpm6_lookup(lpm, (const struct rte_ipv6_addr *)ip, next_hop);
+#else
+	return rte_lpm6_lookup(lpm, ip, next_hop);
+#endif
+}
+
+static int compat_rte_lpm6_is_rule_present(struct rte_lpm6 *lpm, const uint8_t *ip, uint8_t depth, uint32_t *next_hop) {
+#if RTE_VERSION >= RTE_VERSION_NUM(24, 11, 0, 0)
+	return rte_lpm6_is_rule_present(lpm, (const struct rte_ipv6_addr *)ip, depth, next_hop);
+#else
+	return rte_lpm6_is_rule_present(lpm, ip, depth, next_hop);
+#endif
+}
 */
 import "C"
 
@@ -65,14 +98,14 @@ func (r *LPM6) Free() {
 // associated with added IP subnet. Panics if ip is not IPv6.
 func (r *LPM6) Add(ipnet netip.Prefix, nextHop uint32) error {
 	b, prefix := cvtIPv6Net(ipnet)
-	rc := C.rte_lpm6_add((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix), C.uint32_t(nextHop))
+	rc := C.compat_rte_lpm6_add((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix), C.uint32_t(nextHop))
 	return common.IntToErr(rc)
 }
 
 // Delete a rule from LPM6 object. Panics if ip is not IPv6.
 func (r *LPM6) Delete(ipnet netip.Prefix) error {
 	b, prefix := cvtIPv6Net(ipnet)
-	rc := C.rte_lpm6_delete((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix))
+	rc := C.compat_rte_lpm6_delete((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix))
 	return common.IntToErr(rc)
 }
 
@@ -80,7 +113,7 @@ func (r *LPM6) Delete(ipnet netip.Prefix) error {
 func (r *LPM6) Lookup(ip netip.Addr) (uint32, error) {
 	var res uint32
 	ip16 := ip.As16()
-	rc := C.rte_lpm6_lookup((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&ip16[0]), (*C.uint32_t)(&res))
+	rc := C.compat_rte_lpm6_lookup((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&ip16[0]), (*C.uint32_t)(&res))
 	return res, common.IntToErr(rc)
 }
 
@@ -93,7 +126,7 @@ func (r *LPM6) DeleteAll() {
 // nextHop if it is. Panics if ip is not IPv6.
 func (r *LPM6) IsRulePresent(ipnet netip.Prefix, nextHop *uint32) (bool, error) {
 	b, prefix := cvtIPv6Net(ipnet)
-	rc := C.rte_lpm6_is_rule_present((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix), (*C.uint32_t)(nextHop))
+	rc := C.compat_rte_lpm6_is_rule_present((*C.struct_rte_lpm6)(r), (*C.uint8_t)(&b[0]), C.uint8_t(prefix), (*C.uint32_t)(nextHop))
 	n, err := common.IntOrErr(rc)
 	return n != 0, err
 }
