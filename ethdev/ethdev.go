@@ -150,6 +150,58 @@ const (
 	RssIPv6 uint64 = C.RTE_ETH_RSS_IPV6
 )
 
+// RX offload capability flags.
+const (
+	RxOffloadVlanStrip      uint64 = C.RTE_ETH_RX_OFFLOAD_VLAN_STRIP
+	RxOffloadIPv4Cksum      uint64 = C.RTE_ETH_RX_OFFLOAD_IPV4_CKSUM
+	RxOffloadUDPCksum       uint64 = C.RTE_ETH_RX_OFFLOAD_UDP_CKSUM
+	RxOffloadTCPCksum       uint64 = C.RTE_ETH_RX_OFFLOAD_TCP_CKSUM
+	RxOffloadTCPLro         uint64 = C.RTE_ETH_RX_OFFLOAD_TCP_LRO
+	RxOffloadQinQStrip      uint64 = C.RTE_ETH_RX_OFFLOAD_QINQ_STRIP
+	RxOffloadOuterIPv4Cksum uint64 = C.RTE_ETH_RX_OFFLOAD_OUTER_IPV4_CKSUM
+	RxOffloadMacsecStrip    uint64 = C.RTE_ETH_RX_OFFLOAD_MACSEC_STRIP
+	RxOffloadVlanFilter     uint64 = C.RTE_ETH_RX_OFFLOAD_VLAN_FILTER
+	RxOffloadVlanExtend     uint64 = C.RTE_ETH_RX_OFFLOAD_VLAN_EXTEND
+	RxOffloadScatter        uint64 = C.RTE_ETH_RX_OFFLOAD_SCATTER
+	RxOffloadTimestamp      uint64 = C.RTE_ETH_RX_OFFLOAD_TIMESTAMP
+	RxOffloadSecurity       uint64 = C.RTE_ETH_RX_OFFLOAD_SECURITY
+	RxOffloadKeepCRC        uint64 = C.RTE_ETH_RX_OFFLOAD_KEEP_CRC
+	RxOffloadSCTPCksum      uint64 = C.RTE_ETH_RX_OFFLOAD_SCTP_CKSUM
+	RxOffloadOuterUDPCksum  uint64 = C.RTE_ETH_RX_OFFLOAD_OUTER_UDP_CKSUM
+	RxOffloadRssHash        uint64 = C.RTE_ETH_RX_OFFLOAD_RSS_HASH
+	RxOffloadBufferSplit    uint64 = C.RTE_ETH_RX_OFFLOAD_BUFFER_SPLIT
+
+	// Convenience combinations.
+	RxOffloadChecksum uint64 = RxOffloadIPv4Cksum | RxOffloadUDPCksum | RxOffloadTCPCksum
+	RxOffloadVlan     uint64 = RxOffloadVlanStrip | RxOffloadVlanFilter | RxOffloadVlanExtend | RxOffloadQinQStrip
+)
+
+// TX offload capability flags.
+const (
+	TxOffloadVlanInsert      uint64 = C.RTE_ETH_TX_OFFLOAD_VLAN_INSERT
+	TxOffloadIPv4Cksum       uint64 = C.RTE_ETH_TX_OFFLOAD_IPV4_CKSUM
+	TxOffloadUDPCksum        uint64 = C.RTE_ETH_TX_OFFLOAD_UDP_CKSUM
+	TxOffloadTCPCksum        uint64 = C.RTE_ETH_TX_OFFLOAD_TCP_CKSUM
+	TxOffloadSCTPCksum       uint64 = C.RTE_ETH_TX_OFFLOAD_SCTP_CKSUM
+	TxOffloadTCPTso          uint64 = C.RTE_ETH_TX_OFFLOAD_TCP_TSO
+	TxOffloadUDPTso          uint64 = C.RTE_ETH_TX_OFFLOAD_UDP_TSO
+	TxOffloadOuterIPv4Cksum  uint64 = C.RTE_ETH_TX_OFFLOAD_OUTER_IPV4_CKSUM
+	TxOffloadQinQInsert      uint64 = C.RTE_ETH_TX_OFFLOAD_QINQ_INSERT
+	TxOffloadVxlanTnlTso     uint64 = C.RTE_ETH_TX_OFFLOAD_VXLAN_TNL_TSO
+	TxOffloadGreTnlTso       uint64 = C.RTE_ETH_TX_OFFLOAD_GRE_TNL_TSO
+	TxOffloadIpipTnlTso      uint64 = C.RTE_ETH_TX_OFFLOAD_IPIP_TNL_TSO
+	TxOffloadGeneveTnlTso    uint64 = C.RTE_ETH_TX_OFFLOAD_GENEVE_TNL_TSO
+	TxOffloadMacsecInsert    uint64 = C.RTE_ETH_TX_OFFLOAD_MACSEC_INSERT
+	TxOffloadMtLockfree      uint64 = C.RTE_ETH_TX_OFFLOAD_MT_LOCKFREE
+	TxOffloadMultiSegs       uint64 = C.RTE_ETH_TX_OFFLOAD_MULTI_SEGS
+	TxOffloadMbufFastFree    uint64 = C.RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE
+	TxOffloadSecurity        uint64 = C.RTE_ETH_TX_OFFLOAD_SECURITY
+	TxOffloadUDPTnlTso       uint64 = C.RTE_ETH_TX_OFFLOAD_UDP_TNL_TSO
+	TxOffloadIPTnlTso        uint64 = C.RTE_ETH_TX_OFFLOAD_IP_TNL_TSO
+	TxOffloadOuterUDPCksum   uint64 = C.RTE_ETH_TX_OFFLOAD_OUTER_UDP_CKSUM
+	TxOffloadSendOnTimestamp uint64 = C.RTE_ETH_TX_OFFLOAD_SEND_ON_TIMESTAMP
+)
+
 // Option represents device option which is then used by
 // DevConfigure to setup Ethernet device.
 type Option struct {
@@ -974,6 +1026,11 @@ func (info *DevInfo) MaxTxQueues() uint16 {
 	return uint16(info.max_tx_queues)
 }
 
+// RxOffloadCapa returns the bitmask of RX offloads the device supports.
+func (info *DevInfo) RxOffloadCapa() uint64 {
+	return uint64(info.rx_offload_capa)
+}
+
 // available from DPDK v22.11 https://doc.dpdk.org/api-22.11/structrte__eth__dev__info.html#a977df447c171065d6b6a9bded521e0f9
 //
 // MaxRxMempools returns maximum number of Rx mempools supported per Rx queue.
@@ -1094,4 +1151,13 @@ func (pid Port) FlowCtrlGet(conf *FcConf) error {
 // FlowCtrlSet configures the Ethernet link flow control for Ethernet device.
 func (pid Port) FlowCtrlSet(conf *FcConf) error {
 	return errget(C.rte_eth_dev_flow_ctrl_set(C.ushort(pid), (*C.struct_rte_eth_fc_conf)(conf)))
+}
+
+// ReadClock reads the current raw clock counter of the Ethernet device.
+// The returned value is in device-specific ticks; use two calls to compute
+// a tick frequency if needed.
+func (pid Port) ReadClock() (uint64, error) {
+	var clock C.uint64_t
+	err := errget(C.rte_eth_read_clock(C.ushort(pid), &clock))
+	return uint64(clock), err
 }
