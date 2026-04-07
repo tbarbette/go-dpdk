@@ -2,6 +2,7 @@ package mempool
 
 /*
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <rte_config.h>
 #include <rte_mbuf.h>

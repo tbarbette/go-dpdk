@@ -1,6 +1,7 @@
 package ring
 
 /*
+#include <stdlib.h>
 #include "ring_telemetry.h"
 */
 import "C"

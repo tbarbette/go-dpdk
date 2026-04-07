@@ -2,6 +2,7 @@ package flow
 
 /*
 #include <stdint.h>
+#include <stdlib.h>
 #include <rte_config.h>
 #include <rte_flow.h>
 */

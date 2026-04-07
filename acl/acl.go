@@ -4,6 +4,7 @@ Package acl wraps DPDK ACL packet classification library.
 package acl
 
 /*
+#include <stdlib.h>
 #include <rte_acl.h>
 
 RTE_ACL_RULE_DEF(sample_rule, 1);

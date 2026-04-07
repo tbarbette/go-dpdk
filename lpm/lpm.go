@@ -6,6 +6,7 @@ Please refer to DPDK Programmer's Guide for reference and caveats.
 package lpm
 
 /*
+#include <stdlib.h>
 #include <rte_config.h>
 #include <rte_lpm.h>
 #include <rte_lpm6.h>

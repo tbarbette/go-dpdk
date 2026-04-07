@@ -15,6 +15,7 @@ package memzone
 
 /*
 #include <stddef.h>
+#include <stdlib.h>
 #include <rte_config.h>
 #include <rte_memzone.h>
 

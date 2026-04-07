@@ -1,6 +1,7 @@
 package ethdev
 
 /*
+#include <stdlib.h>
 #include "lsc_telemetry.h"
 */
 import "C"
