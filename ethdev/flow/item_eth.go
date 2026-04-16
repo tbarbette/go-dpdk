@@ -89,6 +89,7 @@ func (item *ItemEth) Reload() {
 
 	beU16(item.EtherType, unsafe.Pointer(&hdr.ether_type))
 
+	runtime.SetFinalizer(item, nil)
 	runtime.SetFinalizer(item, (*ItemEth).free)
 }
 

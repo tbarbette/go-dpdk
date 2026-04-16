@@ -57,6 +57,7 @@ func (item *ItemVlan) Reload() {
 	beU16(item.TCI, unsafe.Pointer(&hdr.vlan_tci))
 	beU16(item.InnerType, unsafe.Pointer(&hdr.eth_proto))
 
+	runtime.SetFinalizer(item, nil)
 	runtime.SetFinalizer(item, (*ItemVlan).free)
 }
 

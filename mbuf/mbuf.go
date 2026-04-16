@@ -276,6 +276,28 @@ func (m *Mbuf) PktMbufTailRoomSize() uint16 {
 	return uint16(C.rte_pktmbuf_tailroom(mbuf(m)))
 }
 
+// SetDataLen sets the data_len field of the mbuf (single-segment length).
+func (m *Mbuf) SetDataLen(length uint16) {
+	buf := mbuf(m)
+	*(*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_DATA_LEN)) = length
+}
+
+// SetPktLen sets the pkt_len field of the mbuf (total packet length across all segments).
+func (m *Mbuf) SetPktLen(length uint32) {
+	buf := mbuf(m)
+	*(*uint32)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_PKT_LEN)) = length
+}
+
+// PktMbufTrim removes len bytes from the end of a single-segment mbuf
+// by adjusting data_len and pkt_len.
+func (m *Mbuf) PktMbufTrim(length uint16) {
+	buf := mbuf(m)
+	dlen := (*uint16)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_DATA_LEN))
+	plen := (*uint32)(unsafe.Pointer(uintptr(unsafe.Pointer(buf)) + C.MBUF_PKT_LEN))
+	*dlen -= length
+	*plen -= uint32(length)
+}
+
 // HashRss returns hash.rss field of an mbuf.
 func (m *Mbuf) HashRss() uint32 {
 	p := unsafe.Pointer(m)

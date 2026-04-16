@@ -104,6 +104,7 @@ func Validate(port ethdev.Port, attr *Attr, pattern []Item, actions []Action, fl
 	act := cActions(actions)
 	cAttr := attr.cvtAttr()
 	ret := C.rte_flow_validate(C.ushort(port), &cAttr, &pat[0], &act[0], (*C.struct_rte_flow_error)(flowErr))
+	print("validate returned ", ret, "\n")
 	runtime.KeepAlive(pattern)
 	runtime.KeepAlive(actions)
 	return common.IntToErr(ret)
