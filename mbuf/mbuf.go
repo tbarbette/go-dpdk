@@ -298,6 +298,18 @@ func (m *Mbuf) PktMbufTrim(length uint16) {
 	*plen -= uint32(length)
 }
 
+// Attach makes this mbuf an indirect mbuf pointing to the data of md,
+// incrementing the reference counter of md.
+func (m *Mbuf) Attach(md *Mbuf) {
+	C.rte_pktmbuf_attach(mbuf(m), mbuf(md))
+}
+
+// Chain appends tail as the last segment(s) of this packet.
+func (m *Mbuf) Chain(tail *Mbuf) error {
+	e := C.rte_pktmbuf_chain(mbuf(m), mbuf(tail))
+	return common.IntErr(int64(e))
+}
+
 // HashRss returns hash.rss field of an mbuf.
 func (m *Mbuf) HashRss() uint32 {
 	p := unsafe.Pointer(m)
