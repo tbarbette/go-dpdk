@@ -5,12 +5,6 @@ package mbuf
 #include <rte_mbuf.h>
 #include <rte_mbuf_dyn.h>
 
-// Read a uint64 from a dynamic field at the given byte offset in the mbuf.
-static inline uint64_t go_mbuf_dynfield_get_uint64(struct rte_mbuf *m, int offset)
-{
-	return *RTE_MBUF_DYNFIELD(m, offset, uint64_t *);
-}
-
 // Register the standard RX timestamp dynamic field.
 // On success, *offset receives the byte offset into rte_mbuf where the
 // NIC stores the HW timestamp (as rte_mbuf_timestamp_t / uint64).
@@ -22,14 +16,20 @@ static inline int go_mbuf_dyn_rx_timestamp_register(int *offset, uint64_t *flag)
 */
 import "C"
 
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 // DynfieldGetUint64 reads a uint64 value from a dynamic metadata field
 // at the given byte offset inside the mbuf structure.
 // The offset is obtained from DynRxTimestampRegister (or a similar
 // rte_mbuf_dynfield_register call).
+//
+// This is RTE_MBUF_DYNFIELD in Go: it is called for every received packet,
+// and a cgo call would cost more than the load itself.
 func (m *Mbuf) DynfieldGetUint64(offset int) uint64 {
-	return uint64(C.go_mbuf_dynfield_get_uint64(mbuf(m), C.int(offset)))
+	return *(*uint64)(unsafe.Add(unsafe.Pointer(m), offset))
 }
 
 // DynRxTimestampRegister registers the standard DPDK RX timestamp
